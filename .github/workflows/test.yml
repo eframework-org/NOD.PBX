@@ -54,6 +54,9 @@ jobs:
         shell: bash
         run: |
           echo "🔍 开始测试..."
+
+          # 创建测试报告目录
+          mkdir -p tests/reports
           
           # 运行测试并保存输出
           if ! npm test > tests/reports/output.log 2>&1; then
