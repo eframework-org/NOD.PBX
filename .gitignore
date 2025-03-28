@@ -4,3 +4,4 @@ local
 tests/dist
 tests/reports
 temp
+*.DS_Store
