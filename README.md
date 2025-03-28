@@ -61,14 +61,14 @@ protoc [options] proto_files
 
 ### 2. 生成插件
 
-1. protoc-gen-js-fix
-修复 ES6 模式下的库导入及模块导出问题。
+1. protoc-gen-js-fix：修复 ES6 模式下的库导入及模块导出问题。
+
 ```bash
 --js-fix_out=/path/to/input:/path/to/output
 ```
 
-2. protoc-gen-ts-fix
-修复 gRPC-Web 模式下的代码生成问题。
+2. protoc-gen-ts-fix：修复 gRPC-Web 模式下的代码生成问题。
+
 ```bash
 --ts-fix_out=/path/to/input:/path/to/output
 ```
