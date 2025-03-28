@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package Hello;
+
+option go_package = "./Proto";
+option csharp_namespace = "Proto";
+
+// 服务定义
+service Greeter {
+  // 单向请求
+  rpc SayHello(HelloRequest) returns (HelloReply);
+ 
+  // 服务端流式
+  rpc SayHelloServerStreaming (HelloRequest) returns (stream HelloReply);
+
+  // 客户端流式
+  rpc SayHelloClientStreaming (stream HelloRequest) returns (HelloReply);
+  
+  // 双向流式
+  rpc SayHelloDuplex (stream HelloRequest) returns (stream HelloReply);
+}
+
+// 请求来源
+enum HelloSource {
+  // 客户端
+  Client = 0;
+
+  // 服务器
+  Server = 1;
+}
+
+// 请求数据
+message HelloRequest {
+  // 请求名称
+  string Name = 1;
+
+  // 请求来源
+  HelloSource Source = 2;
+}
+
+// 请求响应
+message HelloReply {
+  // 响应数据
+  string Message = 1;
+
+  // 请求来源
+  HelloSource Source = 2;
+}

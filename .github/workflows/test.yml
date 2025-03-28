@@ -1,0 +1,78 @@
+name: 单元测试
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    outputs:
+      test_passed:
+        description: "测试是否通过"
+        value: ${{ jobs.test.outputs.passed }}
+
+permissions:
+  checks: write
+  contents: read
+  actions: read
+  security-events: write
+
+jobs:
+  test:
+    name: 测试 ${{ matrix.os }} 环境
+    runs-on: ${{ matrix.os }}
+    env:
+      TZ: 'Asia/Shanghai'
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    outputs:
+      passed: ${{ steps.test_result.outputs.passed }}
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: 安装 7zip、unzip、zip 依赖
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install 7zip -y
+          choco install unzip -y
+          choco install zip -yy
+
+      - name: 安装依赖
+        run: |
+          npm install
+
+      - name: 运行测试
+        id: test_result
+        shell: bash
+        run: |
+          echo "🔍 开始测试..."
+          
+          # 运行测试并保存输出
+          if ! npm test > tests/reports/output.log 2>&1; then
+            echo "❌ 测试失败"
+            cat tests/reports/output.log
+            echo "passed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          # 显示测试输出
+          cat tests/reports/output.log
+          
+          echo "✅ 测试通过"
+          echo "passed=true" >> $GITHUB_OUTPUT
+
+      - name: 上传报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-${{ matrix.os }}-reports
+          path: tests/reports
+          retention-days: 14

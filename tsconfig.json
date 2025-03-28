@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "ES2015",
+        "target": "ES2017",
+        "outDir": "dist",
+        "lib": [
+            "ES2017"
+        ],
+        "sourceMap": true,
+        "allowJs": true,
+        "rootDir": ".",
+        "declaration": false,
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "moduleResolution": "Node"
+    },
+    "exclude": [
+        "dist",
+        "node_modules",
+        "tests/proto"
+    ]
+}
