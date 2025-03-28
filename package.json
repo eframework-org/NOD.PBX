@@ -65,6 +65,7 @@
   "scripts": {
     "debug": "rm -rf dist && rm -rf test/dist && rollup -c",
     "release": "rm -rf dist && rm -rf test/dist && rollup -c --mode=production",
-    "test": "npm run release && npm link && jest --coverage --runInBand"
+    "test": "npm run release && npm link && jest --coverage --runInBand",
+    "prepublishOnly": "npm install && npm run release"
   }
 }
