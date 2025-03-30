@@ -2,7 +2,29 @@ name: 单元测试
 
 on:
   workflow_dispatch:
+    inputs:
+      node_versions:
+        description: 'Node 版本：https://nodejs.org/download/release/'
+        required: false
+        type: string
+        default: '["16", "18", "20", "22"]'
+      target_platforms:
+        description: '目标平台：windows-latest, ubuntu-latest, macos-latest'
+        required: false
+        type: string
+        default: '["windows-latest", "ubuntu-latest", "macos-latest"]'
   workflow_call:
+    inputs:
+      node_versions:
+        description: 'Node 版本：https://nodejs.org/download/release/'
+        required: false
+        type: string
+        default: '["16", "18", "20", "22"]'
+      target_platforms:
+        description: '目标平台：windows-latest, ubuntu-latest, macos-latest'
+        required: false
+        type: string
+        default: '["windows-latest", "ubuntu-latest", "macos-latest"]'
     outputs:
       test_passed:
         description: "测试是否通过"
@@ -16,13 +38,15 @@ permissions:
 
 jobs:
   test:
-    name: 测试 ${{ matrix.os }} 环境
+    name: 测试 node${{ matrix.node }}.${{ matrix.os }} 环境
     runs-on: ${{ matrix.os }}
     env:
       TZ: 'Asia/Shanghai'
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        node: ${{ fromJson(github.event.inputs.node_versions || inputs.node_versions) }}
+        os: ${{ fromJson(github.event.inputs.target_platforms || inputs.target_platforms) }}
     outputs:
       passed: ${{ steps.test_result.outputs.passed }}
 
@@ -41,7 +65,7 @@ jobs:
       - name: 设置 Node.js 环境
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: ${{ matrix.node }}
           registry-url: 'https://registry.npmjs.org'
       
       - name: 安装 7zip、unzip、zip 依赖
@@ -79,9 +103,9 @@ jobs:
           echo "passed=true" >> $GITHUB_OUTPUT
 
       - name: 上传报告
-        if: always()
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: test-${{ matrix.os }}-reports
+          name: test#${{ github.run_number }}.node${{ matrix.node }}.${{ matrix.os }}-reports
           path: tests/reports
           retention-days: 14
