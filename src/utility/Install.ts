@@ -170,8 +170,72 @@ export namespace Install {
         }
     }
 
+    //当前下载为gRPC.Core最新版本后期版本为gRPC.DotNet版本，因Unity不支持(待后期Unity的新版本.NET 6+)故使用Core
     async function CSTool(args: Map<string, string> = new Map()) {
-        // TODO
+        const genGrpcCSVer = args.get("protoc-gen-csharp-grpc") ? args.get("protoc-gen-csharp-grpc") : "1.47.0"
+        const genGrpcCSVerLocal = XFile.PathJoin(XEnv.LocalPath, "protoc-gen-csharp-grpc.ver")
+        if (XFile.HasFile(genGrpcCSVerLocal) && !args.get("protoc-gen-csharp-grpc")) {
+            XLog.Debug(`CSTool(protoc-gen-csharp-grpc): @${XFile.OpenText(genGrpcCSVerLocal)}`)
+        } else {
+            const commitID = "67538122780f8a081c774b66884289335c290cbe"
+            const buildID = "f15a2c1c-582b-4c51-acf2-ab6d711d2c59"
+            const binurl = {
+                "win32_x86": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_windows_x86-${genGrpcCSVer}-dev.zip`,
+                "win32_x64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_windows_x64-${genGrpcCSVer}-dev.zip`,
+                "linux_x86": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_linux_x86-${genGrpcCSVer}-dev.tar.gz`,
+                "linux_x64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_linux_x64-${genGrpcCSVer}-dev.tar.gz`,
+                "macos_x64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_macos_x64-${genGrpcCSVer}-dev.tar.gz`,
+            }
+
+            try {
+                const plat = process.platform
+                const arch = process.arch === "arm64" ? "aarch_64" : (process.arch === "x64" ? "x64" : "x32")
+                const bin = plat + "_" + arch
+                const dir = XFile.PathJoin(XEnv.LocalPath, "grpc-protoc")
+                const file = XFile.PathJoin(dir, plat === "win32" ? "grpc_csharp_plugin.exe" : "grpc_csharp_plugin")
+                const targetFile = XFile.PathJoin(XEnv.LocalPath, plat === "win32" ? "protoc-gen-csharp-grpc.exe" : "protoc-gen-csharp-grpc")
+
+                let url = binurl[bin]
+                if (!url) throw new Error(`Unsupported platform: ${bin}. Was not able to find a proper version.`)
+
+                XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): fetch from ${url}.`)
+
+                XFile.DeleteDirectory(dir)
+                XFile.CreateDirectory(dir)
+
+                const zip = XFile.PathJoin(dir, XFile.FileName(url))
+                const ws = fs.createWriteStream(zip)
+
+                await new Promise((resolve, reject) => {
+                    https.get(url, (response) => {
+                        response.pipe(ws)
+                        ws.on("finish", () => {
+                            ws.close(() => {
+                                XLog.Debug(`Install.Grpc-Protoc: fetch into ${zip}.`)
+                                try {
+                                    XFile.Unzip(zip, dir, () => {
+                                        XFile.CopyFile(file, targetFile)
+                                        XFile.DeleteDirectory(dir)
+                                        resolve(true)
+                                    })
+                                } catch (err) { reject(err) }
+                            })
+                        })
+                    }).on("error", reject)
+                })
+
+                XFile.DeleteFile(zip)
+
+                fs.chmodSync(targetFile, 0o755)
+                XLog.Debug(`Install.Grpc-Protoc: chmod to 0o755.`)
+
+                XLog.Debug(`Install.Grpc-Protoc: @${genGrpcCSVer} has been installed.`)
+                XFile.SaveText(genGrpcCSVerLocal, genGrpcCSVer)
+            } catch (err) {
+                XLog.Error(`Install.CSTool(protoc-gen-grpc): @${genGrpcCSVer} install failed: ${err}`)
+                throw err
+            }
+        }
     }
 
     async function JSTool(args: Map<string, string> = new Map()) {
