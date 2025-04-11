@@ -13,8 +13,8 @@ EFramework Protoc for Node 简化了 Protocol Buffers 和 gRPC 的安装与使�
 | Go | ✅ | ✅ |
 | C#(.NET) | ✅ | ✅ |
 | JavaScript(Web) | ✅ | ✅ |
-| Lua | ❌ | ➖ |
-- ✅已支持  ❓开发中  ❌未支持  ➖不适用
+| Lua | 📅 | ➖ |
+- ✅已支持  📅开发中  ➖不适用
 
 ### 工具链管理
 - 🚀 一键安装 protoc/gRPC 工具链
@@ -43,7 +43,7 @@ protox [options]
   - --protoc-gen-web-grpc=<ver>：protoc-gen-web-grpc 工具版本，默认：1.5.0
   - --protoc-gen-ts=<ver>：protoc-gen-ts 工具版本，默认：latest
   - --gitproxy=<url>：git 代理地址，默认：https://ghproxy.cn/
-  - --goproxy=<url>：go 代理地址，默认：https://goproxy.cn，direct
+  - --goproxy=<url>：go 代理地址，默认：https://goproxy.cn,direct
   - --npmproxy=<url>：npm 代理地址，默认：https://registry.npmmirror.com/
 - --xxx_out：与原生工具参数相同
 
@@ -87,6 +87,13 @@ protoc [options] proto_files
 - 同一个 package 中的枚举值必须唯一，即使它们属于不同的枚举类型
 - 例如：MemMode 使用 `None`，LogLevel 使用 `Undefined` 作为默认值，避免命名冲突
 - 这是因为枚举值使用 C++ 作用域规则，它们是类型的兄弟而不是子级
+
+### 4. 为什么 C#(.NET) 环境下安装的是 gRPC.Core 而不是 gRPC.NET？
+- gRPC.Core 是一个基于 C++ 的 gRPC 实现，它有自己的 TLS 和 HTTP/2 栈。Grpc.Core 包是一个.NET包装器，围绕 gRPC C-core 构建，包含 gRPC 客户端和服务器
+- gRPC .NET 是专为.NET Core 3.x 和.NET 5 或更高版本设计的 gRPC 实现。它利用现代.NET版本中内置的 TLS 和 HTTP/2 栈
+- 当前使用 gRPC.Core 的最后一个版本，最新版本为 gRPC.NET 实现
+- 因 Unity 不支持 HTTP2（截至 6000.0.32f1）故使用 Core 版本
+- 待 Unity 支持 HTTP2 后可使用 .NET 版本
 
 更多问题，请查阅[问题反馈](CONTRIBUTING.md#问题反馈)。
 

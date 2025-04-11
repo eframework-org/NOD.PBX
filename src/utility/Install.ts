@@ -170,13 +170,13 @@ export namespace Install {
         }
     }
 
-    //当前下载为gRPC.Core最新版本后期版本为gRPC.DotNet版本，因Unity不支持(待后期Unity的新版本.NET 6+)故使用Core
     async function CSTool(args: Map<string, string> = new Map()) {
         const genGrpcCSVer = args.get("protoc-gen-csharp-grpc") ? args.get("protoc-gen-csharp-grpc") : "1.47.0"
         const genGrpcCSVerLocal = XFile.PathJoin(XEnv.LocalPath, "protoc-gen-csharp-grpc.ver")
         if (XFile.HasFile(genGrpcCSVerLocal) && !args.get("protoc-gen-csharp-grpc")) {
             XLog.Debug(`CSTool(protoc-gen-csharp-grpc): @${XFile.OpenText(genGrpcCSVerLocal)}`)
         } else {
+            // 因 Unity 不支持 HTTP2（截至 6000.0.32f1）故使用 Core 版本
             const commitID = "67538122780f8a081c774b66884289335c290cbe"
             const buildID = "f15a2c1c-582b-4c51-acf2-ab6d711d2c59"
             const binurl = {
@@ -211,7 +211,7 @@ export namespace Install {
                         response.pipe(ws)
                         ws.on("finish", () => {
                             ws.close(() => {
-                                XLog.Debug(`Install.Grpc-Protoc: fetch into ${zip}.`)
+                                XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): fetch into ${zip}.`)
                                 try {
                                     XFile.Unzip(zip, dir, () => {
                                         XFile.CopyFile(file, targetFile)
@@ -227,12 +227,12 @@ export namespace Install {
                 XFile.DeleteFile(zip)
 
                 fs.chmodSync(targetFile, 0o755)
-                XLog.Debug(`Install.Grpc-Protoc: chmod to 0o755.`)
+                XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): chmod to 0o755.`)
 
-                XLog.Debug(`Install.Grpc-Protoc: @${genGrpcCSVer} has been installed.`)
+                XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): @${genGrpcCSVer} has been installed.`)
                 XFile.SaveText(genGrpcCSVerLocal, genGrpcCSVer)
             } catch (err) {
-                XLog.Error(`Install.CSTool(protoc-gen-grpc): @${genGrpcCSVer} install failed: ${err}`)
+                XLog.Error(`Install.CSTool(protoc-gen-csharp-grpc): @${genGrpcCSVer} install failed: ${err}`)
                 throw err
             }
         }
