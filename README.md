@@ -11,7 +11,7 @@ EFramework Protoc for Node 简化了 Protocol Buffers 和 gRPC 的安装与使�
 | 语言 | Protobuf | gRPC |
 |:---:|:---:|:---:|
 | Go | ✅ | ✅ |
-| C#(.NET) | ❓ | ❓ |
+| C#(.NET) | ✅ | ✅ |
 | JavaScript(Web) | ✅ | ✅ |
 | Lua | ❌ | ➖ |
 - ✅已支持  ❓开发中  ❌未支持  ➖不适用
