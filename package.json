@@ -41,7 +41,7 @@
     "LICENSE"
   ],
   "dependencies": {
-    "org.eframework.uni.util": "0.0.1",
+    "org.eframework.uni.util": "0.0.2",
     "follow-redirects": "1.15.9",
     "google-protobuf": "3.21.4",
     "grpc-web": "1.5.0",
