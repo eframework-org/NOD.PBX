@@ -184,7 +184,7 @@ export namespace Install {
                 "win32_x64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_windows_x64-${genGrpcCSVer}-dev.zip`,
                 "linux_x86": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_linux_x86-${genGrpcCSVer}-dev.tar.gz`,
                 "linux_x64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_linux_x64-${genGrpcCSVer}-dev.tar.gz`,
-                "macos_x64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_macos_x64-${genGrpcCSVer}-dev.tar.gz`,
+                "darwin_aarch_64": `https://packages.grpc.io/archive/2022/04/${commitID}-${buildID}/protoc/grpc-protoc_macos_x64-${genGrpcCSVer}-dev.tar.gz`,
             }
 
             try {
@@ -212,25 +212,21 @@ export namespace Install {
                         ws.on("finish", () => {
                             ws.close(() => {
                                 XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): fetch into ${zip}.`)
-                                try {
-                                    XFile.Unzip(zip, dir, () => {
-                                        XFile.CopyFile(file, targetFile)
-                                        XFile.DeleteDirectory(dir)
-                                        resolve(true)
-                                    })
-                                } catch (err) { reject(err) }
+                                try { XFile.Unzip(zip, dir, resolve) } catch (err) { reject(err) }
                             })
                         })
                     }).on("error", reject)
                 })
 
-                XFile.DeleteFile(zip)
-
+                XFile.CopyFile(file, targetFile)
                 fs.chmodSync(targetFile, 0o755)
                 XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): chmod to 0o755.`)
 
                 XLog.Debug(`Install.CSTool(protoc-gen-csharp-grpc): @${genGrpcCSVer} has been installed.`)
                 XFile.SaveText(genGrpcCSVerLocal, genGrpcCSVer)
+
+                XFile.DeleteFile(zip)
+                XFile.DeleteDirectory(dir)
             } catch (err) {
                 XLog.Error(`Install.CSTool(protoc-gen-csharp-grpc): @${genGrpcCSVer} install failed: ${err}`)
                 throw err
