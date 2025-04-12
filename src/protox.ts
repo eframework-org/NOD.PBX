@@ -17,8 +17,8 @@ import { Protoc } from "./protoc"
                 let manual = false
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i]
-                    if (!manual && line.indexOf("## Manual") >= 0) manual = true
-                    else if (manual && line.startsWith("##")) manual = false   // End of manual section
+                    if (!manual && line.indexOf("## 使用手册") >= 0) manual = true
+                    else if (manual && line.startsWith("## ")) manual = false   // End of manual section
                     if (manual) nlines.push(line)
                 }
                 if (nlines.length == 0) console.info(XFile.OpenText(mfile))
