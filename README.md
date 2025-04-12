@@ -13,8 +13,8 @@ EFramework Protoc for Node 简化了 Protocol Buffers 和 gRPC 的安装与使�
 | Go | ✅ | ✅ |
 | C#(.NET) | ✅ | ✅ |
 | JavaScript(Web) | ✅ | ✅ |
-| Lua | 📅 | ➖ |
-- ✅已支持  📅开发中  ➖不适用
+| Lua | 🛠️ | 🚫 |
+- ✅已支持  🛠️计划中  🚫不适用
 
 ### 工具链管理
 - 🚀 一键安装 protoc/gRPC 工具链
