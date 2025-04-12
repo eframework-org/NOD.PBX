@@ -2,7 +2,7 @@
   "name": "org.eframework.nod.pbx",
   "displayName": "EFramework Protoc for Node",
   "description": "EFramework Protoc for Node 简化了 Protocol Buffers 和 gRPC 的安装与使用。",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "author": {
     "name": "EFramework Organization",
