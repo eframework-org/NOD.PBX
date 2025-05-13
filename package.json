@@ -5,10 +5,11 @@
   "version": "0.0.3",
   "license": "MIT",
   "author": {
-    "name": "EFramework Organization",
+    "name": "EFramework",
     "email": "eframework-org@outlook.com",
     "url": "https://github.com/eframework-org"
   },
+  "homepage": "https://eframework-org.github.io",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eframework-org/NOD.PBX.git"
