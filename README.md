@@ -1,7 +1,8 @@
 # EFramework Protoc for Node
 
 [![Version](https://img.shields.io/npm/v/org.eframework.nod.pbx)](https://www.npmjs.com/package/org.eframework.nod.pbx)
-[![Downloads](https://img.shields.io/npm/dm/org.eframework.nod.pbx)](https://www.npmjs.com/package/org.eframework.nod.pbx)  
+[![Downloads](https://img.shields.io/npm/dm/org.eframework.nod.pbx)](https://www.npmjs.com/package/org.eframework.nod.pbx)
+[![DeepWiki](https://img.shields.io/badge/DeepWiki-Explore-blue)](https://deepwiki.com/eframework-org/NOD.PBX)
 
 EFramework Protoc for Node 简化了 Protocol Buffers 和 gRPC 的安装与使用。
 
